@@ -5,21 +5,13 @@ import json
 
 from config import *
 from detector import detect_dataset
-from analyzer import (
-    analyze_reviews,
-    analyze_stock,
-    analyze_sales,
-    analyze_student,
-    analyze_general
-)
+from smart_ai import smart_ai_analyzer
 from charts import (
     stock_line_chart,
     sales_bar_chart,
     sentiment_pie_chart,
     histogram_chart
 )
-
-from smart_ai import smart_ai_analyzer
 
 app = Flask(__name__)
 
