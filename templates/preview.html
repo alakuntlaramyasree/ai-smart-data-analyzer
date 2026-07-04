@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Preview</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Uploaded Successfully</h1>
+
+<h3>{{ filename }}</h3>
+
+{{ tables|safe }}
+
+<br>
+
+<a href="/">Upload Another File</a>
+
+</div>
+
+</body>
+
+</html>
