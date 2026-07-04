@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AI Smart Data Analyzer</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            background: #111827;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            color: #38bdf8;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+        }
+
+        /* Main */
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1f2937;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .highlight {
+            font-size: 20px;
+            color: #38bdf8;
+        }
+
+        table {
+            width: 100%;
+            color: white;
+        }
+
+        button {
+            background: #38bdf8;
+            border: none;
+            padding: 10px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+
+    <h2>AI Analyzer</h2>
+
+    <a href="/">Upload New File</a>
+    <a href="/download">Download Report</a>
+
+    <hr>
+
+    <p>Dataset Type:</p>
+    <b>{{ dataset_type }}</b>
+
+</div>
+
+<!-- Main -->
+<div class="main">
+
+    <h1>📊 Smart Data Dashboard</h1>
+
+    <!-- Summary -->
+    <div class="grid">
+
+        <div class="card">
+            <div class="highlight">{{ summary.Rows }}</div>
+            <p>Rows</p>
+        </div>
+
+        <div class="card">
+            <div class="highlight">{{ summary.Columns }}</div>
+            <p>Columns</p>
+        </div>
+
+        <div class="card">
+            <div class="highlight">{{ summary["Duplicate Rows"] }}</div>
+            <p>Duplicates</p>
+        </div>
+
+    </div>
+
+    <!-- AI Insights -->
+    <div class="card">
+
+        <h3>🤖 AI Insights</h3>
+
+        <p>{{ ai_result }}</p>
+
+    </div>
+
+    <!-- Chart -->
+    <div class="card">
+
+        <h3>📈 Visualization</h3>
+
+        {{ chart | safe }}
+
+    </div>
+
+    <!-- Preview -->
+    <div class="card">
+
+        <h3>📄 Data Preview</h3>
+
+        {{ preview | safe }}
+
+    </div>
+
+    <!-- Download -->
+    <div class="card">
+
+        <a href="/download">
+            <button>Download Report</button>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

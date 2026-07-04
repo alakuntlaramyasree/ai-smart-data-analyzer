@@ -1,69 +1,32 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-
-<title>AI Review Analyzer</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    <title>AI Review Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>AI Review Analyzer</h1>
+    <h1>AI Review Analyzer</h1>
 
-<p>Upload your customer reviews CSV file.</p>
+    <p>Upload your customer reviews CSV file.</p>
 
-<form action="/upload" method="POST" enctype="multipart/form-data">
+    <form action="/upload" method="POST" enctype="multipart/form-data">
 
-<input type="file" name="file" accept=".csv" required>
+        <input type="file" name="file" accept=".csv" required>
 
-<br><br>
+        <br><br>
 
-<button type="submit">
-Analyze Reviews
-</button>
+        <button type="submit">
+            Analyze Reviews
+        </button>
 
-</form>
-
-</div>
-
-</body>
-
-</html><!DOCTYPE html>
-<html>
-<head>
-
-<title>AI Review Analyzer</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>AI Review Analyzer</h1>
-
-<p>Upload your customer reviews CSV file.</p>
-
-<form action="/upload" method="POST" enctype="multipart/form-data">
-
-<input type="file" name="file" accept=".csv" required>
-
-<br><br>
-
-<button type="submit">
-Analyze Reviews
-</button>
-
-</form>
+    </form>
 
 </div>
 
 </body>
-
 </html>
