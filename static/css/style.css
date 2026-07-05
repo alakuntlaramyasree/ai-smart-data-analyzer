@@ -1,189 +1,581 @@
+/* ==========================================
+   AI Smart Data Analyzer Pro
+   style.css
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
 body{
 
-background:#eef2f7;
+    font-family:'Poppins',sans-serif;
 
-font-family:Arial;
+    background:#f4f7fb;
 
-margin:0;
+    color:#222;
 
-padding:0;
+    min-height:100vh;
 
 }
 
-.container{
 
-width:90%;
+/* ===========================
+Navbar
+=========================== */
 
-max-width:900px;
+.navbar{
 
-margin:auto;
+    background:linear-gradient(90deg,#2c3e50,#4a69bd);
 
-margin-top:40px;
+}
 
-background:white;
+.navbar-brand{
+
+    font-size:1.4rem;
+
+    font-weight:700;
+
+}
+
+.navbar .btn{
+
+    border-radius:12px;
+
+}
+
+
+/* ===========================
+Hero Section
+=========================== */
+
+.hero-section{
+
+    background:linear-gradient(135deg,#4a69bd,#6a89cc);
+
+    color:white;
+
+    padding:70px;
+
+    border-radius:25px;
+
+    text-align:center;
+
+    box-shadow:0 20px 40px rgba(0,0,0,.12);
+
+}
+
+.hero-section h1{
+
+    font-size:3rem;
+
+    font-weight:700;
+
+}
+
+.hero-section p{
+
+    font-size:1.2rem;
+
+    opacity:.9;
+
+}
+
+
+/* ===========================
+Statistic Cards
+=========================== */
+
+.stat-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    text-align:center;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.stat-card h5{
+
+    color:#888;
+
+}
+
+.stat-card h2{
+
+    color:#4a69bd;
+
+    font-weight:700;
+
+}
+
+/* ===========================
+Upload Card
+=========================== */
+
+.upload-card{
+
+    margin-top:50px;
+
+    border:none;
+
+    border-radius:25px;
+
+}
+
+.upload-card .card-body{
+
+    padding:50px;
+
+}
+
+.upload-card input{
+
+    border-radius:12px;
+
+}
+
+.upload-card button{
+
+    border-radius:12px;
+
+    padding:12px 30px;
+
+    font-size:18px;
+
+}
+
+
+/* ===========================
+Dashboard Cards
+=========================== */
+
+.dashboard-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:20px;
+
+    text-align:center;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.dashboard-card:hover{
+
+    transform:scale(1.03);
+
+}
+
+.dashboard-card h6{
+
+    color:#777;
+
+}
+
+.dashboard-card h3{
+
+    color:#4a69bd;
+
+    font-weight:700;
+
+}
+
+/* ===========================
+Buttons
+=========================== */
+
+.btn{
+
+    border-radius:10px;
+
+    transition:.3s;
+
+}
+
+.btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ===========================
+Footer
+=========================== */
+
+footer{
+
+    padding:20px;
+
+    color:#666;
+
+}
+
+/* ==========================================
+   Glassmorphism Cards
+========================================== */
+
+.glass-card{
+
+    background:rgba(255,255,255,.75);
+
+    backdrop-filter:blur(12px);
+
+    border-radius:20px;
+
+    border:1px solid rgba(255,255,255,.3);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.1);
+
+}
+
+
+/* ==========================================
+Hover Animation
+========================================== */
+
+.card,
+.dashboard-card,
+.stat-card{
+
+    transition:all .35s ease;
+
+}
+
+.card:hover,
+.dashboard-card:hover,
+.stat-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 20px 40px rgba(0,0,0,.15);
+
+}
+
+
+/* ==========================================
+Gradient Buttons
+========================================== */
+
+.btn-primary{
+
+    background:linear-gradient(90deg,#4a69bd,#6a89cc);
+
+    border:none;
+
+}
+
+.btn-success{
+
+    background:linear-gradient(90deg,#20bf6b,#26de81);
+
+    border:none;
+
+}
+
+.btn-warning{
+
+    background:linear-gradient(90deg,#f7b731,#fed330);
+
+    color:black;
+
+    border:none;
+
+}
+
+.btn-danger{
+
+    border:none;
+
+}
+
+
+/* ==========================================
+Charts
+========================================== */
+
+.plotly{
+
+    border-radius:20px;
+
+}
+
+.js-plotly-plot{
+
+    width:100%!important;
+
+}
+
+/* ==========================================
+Data Tables
+========================================== */
+
+.table{
+
+    background:white;
+
+}
+
+.table tbody tr:hover{
+
+    background:#f8f9fd;
+
+}
+
+.table th{
+
+    font-weight:600;
+
+}
+
+
+/* ==========================================
+AI Insights Box
+========================================== */
+
+pre{
+
+    white-space:pre-wrap;
+
+    font-family:'Poppins',sans-serif;
+
+    line-height:1.7;
+
+    font-size:15px;
+
+}
+
+
+/* ==========================================
+Quality Badge
+========================================== */
+
+.badge{
+
+    padding:10px 16px;
+
+    font-size:14px;
+
+    border-radius:30px;
+
+}
+
+/* ==========================================
+File Upload
+========================================== */
+
+input[type=file]{
+
+    padding:12px;
+
+    cursor:pointer;
+
+}
+
+input[type=file]::-webkit-file-upload-button{
+
+    background:#4a69bd;
+
+    color:white;
+
+    border:none;
+
+    padding:10px 20px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+/* ==========================================
+Loading Spinner
+========================================== */
+
+.loader{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    border:8px solid #ddd;
+
+    border-top:8px solid #4a69bd;
+
+    animation:spin 1s linear infinite;
+
+    margin:auto;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+/* ==========================================
+Fade Animation
+========================================== */
+
+.fade-up{
+
+    animation:fadeUp .8s ease;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ==========================================
+Responsive
+========================================== */
+
+@media(max-width:992px){
+
+.hero-section{
+
+padding:45px;
+
+}
+
+.hero-section h1{
+
+font-size:2.3rem;
+
+}
+
+.dashboard-card{
+
+margin-bottom:20px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.hero-section{
 
 padding:30px;
 
-border-radius:10px;
+}
 
-box-shadow:0px 0px 15px rgba(0,0,0,.1);
+.hero-section h1{
 
-text-align:center;
+font-size:1.8rem;
 
 }
 
-h1{
+.upload-card .card-body{
 
-color:#1565C0;
+padding:25px;
 
 }
 
-button{
-
-background:#1565C0;
-
-color:white;
-
-border:none;
-
-padding:12px 25px;
+.navbar-brand{
 
 font-size:18px;
 
-border-radius:5px;
-
-cursor:pointer;
+}
 
 }
 
-button:hover{
+/* ==========================================
+Scrollbar
+========================================== */
 
-background:#0D47A1;
+::-webkit-scrollbar{
 
-}
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-margin-top:30px;
+width:10px;
 
 }
 
-table,th,td{
+::-webkit-scrollbar-thumb{
 
-border:1px solid #ddd;
-
-}
-
-th{
-
-background:#1565C0;
-
-color:white;
-
-padding:10px;
-
-}
-
-td{
-
-padding:8px;
-
-}body{
-
-background:#eef2f7;
-
-font-family:Arial;
-
-margin:0;
-
-padding:0;
-
-}
-
-.container{
-
-width:90%;
-
-max-width:900px;
-
-margin:auto;
-
-margin-top:40px;
-
-background:white;
-
-padding:30px;
+background:#4a69bd;
 
 border-radius:10px;
 
-box-shadow:0px 0px 15px rgba(0,0,0,.1);
+}
 
-text-align:center;
+::-webkit-scrollbar-track{
+
+background:#ececec;
 
 }
 
-h1{
+/* ==========================================
+Background Gradient
+========================================== */
 
-color:#1565C0;
+body{
 
-}
+background:linear-gradient(
 
-button{
+135deg,
 
-background:#1565C0;
+#eef2ff,
 
-color:white;
+#f8fbff,
 
-border:none;
+#ffffff
 
-padding:12px 25px;
+);
 
-font-size:18px;
-
-border-radius:5px;
-
-cursor:pointer;
+background-attachment:fixed;
 
 }
 
-button:hover{
-
-background:#0D47A1;
-
-}
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-margin-top:30px;
-
-}
-
-table,th,td{
-
-border:1px solid #ddd;
-
-}
-
-th{
-
-background:#1565C0;
-
-color:white;
-
-padding:10px;
-
-}
-
-td{
-
-padding:8px;
-
-}

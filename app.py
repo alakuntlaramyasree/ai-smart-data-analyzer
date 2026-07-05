@@ -1,19 +1,39 @@
-from flask import Flask, render_template, request, send_file
+from flask import (
+    Flask,
+    render_template,
+    request,
+    send_file,
+    redirect,
+    flash
+)
+
 import os
+import traceback
 import pandas as pd
-import json
 
 from config import *
+
 from detector import detect_dataset
+
+from profiler import full_profile
+
 from smart_ai import smart_ai_analyzer
-from charts import (
-    stock_line_chart,
-    sales_bar_chart,
-    sentiment_pie_chart,
-    histogram_chart
+
+from charts import generate_dashboard
+
+from database import (
+    init_db,
+    save_analysis,
+    get_history,
+    delete_analysis,
+    total_analysis
 )
 
 app = Flask(__name__)
+
+app.secret_key = "AI_SMART_ANALYZER"
+
+init_db()
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
@@ -21,23 +41,28 @@ os.makedirs(RESULT_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# -----------------------------
+####################################################
 # Helper Functions
-# -----------------------------
+####################################################
 
 def allowed_file(filename):
-    return "." in filename and \
-           filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+    return (
+        "." in filename
+        and
+        filename.rsplit(".",1)[1].lower()
+        in ALLOWED_EXTENSIONS
+    )
 
 
-def read_file(filepath):
+def read_dataset(filepath):
 
     extension = filepath.split(".")[-1].lower()
 
     if extension == "csv":
         return pd.read_csv(filepath)
 
-    elif extension in ["xlsx", "xls"]:
+    elif extension in ["xlsx","xls"]:
         return pd.read_excel(filepath)
 
     elif extension == "json":
@@ -47,120 +72,268 @@ def read_file(filepath):
         return None
 
 
-def dataset_summary(df):
-
-    summary = {
-        "Rows": len(df),
-        "Columns": len(df.columns),
-        "Column Names": list(df.columns),
-        "Missing Values": df.isnull().sum().to_dict(),
-        "Duplicate Rows": int(df.duplicated().sum())
-    }
-
-    return summary
-
-
-# -----------------------------
-# Routes
-# -----------------------------
+####################################################
+# HOME
+####################################################
 
 @app.route("/")
 def home():
-    return render_template("index.html")
 
+    history = get_history()
 
-@app.route("/upload", methods=["POST"])
-def upload():
-
-    if "file" not in request.files:
-        return "No file uploaded."
-
-    file = request.files["file"]
-
-    if file.filename == "":
-        return "Please select a file."
-
-    if not allowed_file(file.filename):
-        return "Unsupported file format."
-
-    filepath = os.path.join(
-        app.config["UPLOAD_FOLDER"],
-        file.filename
-    )
-
-    file.save(filepath)
-
-    df = read_file(filepath)
-
-    if df is None:
-        return "Unable to read file."
-
-    dataset_type = detect_dataset(df)
-
-    summary = dataset_summary(df)
-
-    # -------------------------
-    # Route Analysis
-    # -------------------------
-
-    ai_result = smart_ai_analyzer(df, dataset_type)
-
-    # Save original dataset
-
-    output_file = os.path.join(
-        RESULT_FOLDER,
-        "analyzed_data.csv"
-    )
-
-    df.to_csv(
-        output_file,
-        index=False
-    )
-
-    preview = df.head(20).to_html(
-        classes="table table-striped",
-        index=False
-    )
-
-    # -------------------------
-    # Generate Charts
-    # -------------------------
-
-    chart_html = ""
-
-    if dataset_type == "stock":
-        chart_html = stock_line_chart(df)
-
-    elif dataset_type == "sales":
-        chart_html = sales_bar_chart(df)
-
-    elif dataset_type == "reviews":
-        chart_html = sentiment_pie_chart(df)
-
-    else:
-        chart_html = histogram_chart(df)
+    total = total_analysis()
 
     return render_template(
-    "dashboard.html",
-    dataset_type=dataset_type.title(),
-    summary=summary,
-    ai_result=ai_result,
-    preview=preview,
-    chart=chart_html
-)
 
+        "index.html",
+
+        history=history,
+
+        total_analysis=total
+
+    )
+
+
+####################################################
+# HISTORY
+####################################################
+
+@app.route("/history")
+def history():
+
+    history = get_history()
+
+    return render_template(
+
+        "history.html",
+
+        history=history
+
+    )
+
+
+####################################################
+# DELETE HISTORY
+####################################################
+
+@app.route("/delete/<int:id>")
+def delete(id):
+
+    delete_analysis(id)
+
+    flash("History deleted successfully.")
+
+    return redirect("/history")
+
+
+####################################################
+# DOWNLOAD
+####################################################
 
 @app.route("/download")
 def download():
 
     return send_file(
+
         os.path.join(
+
             RESULT_FOLDER,
+
             "analyzed_data.csv"
+
         ),
+
         as_attachment=True
+
     )
 
 
+####################################################
+# UPLOAD
+####################################################
+
+@app.route("/upload", methods=["POST"])
+def upload():
+
+    try:
+
+        if "file" not in request.files:
+
+            flash("No file selected.")
+
+            return redirect("/")
+
+        file = request.files["file"]
+
+        if file.filename == "":
+
+            flash("Please choose a file.")
+
+            return redirect("/")
+
+        if not allowed_file(file.filename):
+
+            flash("Unsupported file.")
+
+            return redirect("/")
+
+        filepath = os.path.join(
+
+            app.config["UPLOAD_FOLDER"],
+
+            file.filename
+
+        )
+
+        file.save(filepath)
+
+        df = read_dataset(filepath)
+
+        if df is None:
+
+            flash("Unable to read file.")
+
+            return redirect("/")
+
+        dataset_type = detect_dataset(df)
+
+        profile = full_profile(df)
+
+        quality_score = profile["quality_score"]
+
+        ai_result = smart_ai_analyzer(
+
+            df,
+
+            dataset_type
+
+        )
+
+        save_analysis(
+
+            filename=file.filename,
+
+            dataset_type=dataset_type,
+
+            rows=len(df),
+
+            columns=len(df.columns),
+
+            quality_score=quality_score,
+
+            ai_summary=ai_result
+
+        )
+
+        output_file = os.path.join(
+
+            RESULT_FOLDER,
+
+            "analyzed_data.csv"
+
+        )
+
+        df.to_csv(
+
+            output_file,
+
+            index=False
+
+        )
+
+        preview = df.head(
+
+            MAX_PREVIEW_ROWS
+
+        ).to_html(
+
+            index=False,
+
+            classes="table"
+
+        )
+
+        charts = generate_dashboard(
+
+            df,
+
+            dataset_type
+
+        )
+
+        return render_template(
+
+            "dashboard.html",
+
+            app_name=APP_NAME,
+
+            dataset_type=dataset_type.title(),
+
+            filename=file.filename,
+
+            summary=profile["basic"],
+
+            quality_score=quality_score,
+
+            ai_result=ai_result,
+
+            preview=preview,
+
+            charts=charts,
+
+            numeric_summary=profile["numeric"],
+
+            categorical_summary=profile["categorical"],
+
+            correlation=profile["correlation"],
+
+            outliers=profile["outliers"],
+
+            memory=profile["memory_mb"]
+
+        )
+
+    except Exception as e:
+
+        traceback.print_exc()
+
+        return render_template(
+
+            "error.html",
+
+            error=str(e)
+
+        )
+
+
+####################################################
+# ERROR HANDLER
+####################################################
+
+@app.errorhandler(404)
+def page_not_found(error):
+
+    return render_template(
+
+        "error.html",
+
+        error="Page not found."
+
+    ), 404
+
+
+####################################################
+# SERVER
+####################################################
+
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    app.run(
+
+        debug=True,
+
+        host="0.0.0.0",
+
+        port=5000
+
+    )

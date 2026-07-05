@@ -1,163 +1,323 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <title>AI Smart Data Analyzer</title>
+{% block content %}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<div class="container-fluid">
 
-    <style>
+    <!-- Header -->
 
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #0f172a;
-            color: white;
-            display: flex;
-        }
+    <div class="row mb-4">
 
-        /* Sidebar */
-        .sidebar {
-            width: 220px;
-            background: #111827;
-            height: 100vh;
-            padding: 20px;
-        }
+        <div class="col-lg-8">
 
-        .sidebar h2 {
-            color: #38bdf8;
-        }
+            <h2 class="fw-bold">
+                📊 Analysis Dashboard
+            </h2>
 
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            margin: 15px 0;
-        }
+            <p class="text-muted">
+                {{ filename }}
+            </p>
 
-        /* Main */
-        .main {
-            flex: 1;
-            padding: 20px;
-        }
-
-        .card {
-            background: #1f2937;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 10px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .highlight {
-            font-size: 20px;
-            color: #38bdf8;
-        }
-
-        table {
-            width: 100%;
-            color: white;
-        }
-
-        button {
-            background: #38bdf8;
-            border: none;
-            padding: 10px;
-            color: black;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-<!-- Sidebar -->
-<div class="sidebar">
-
-    <h2>AI Analyzer</h2>
-
-    <a href="/">Upload New File</a>
-    <a href="/download">Download Report</a>
-
-    <hr>
-
-    <p>Dataset Type:</p>
-    <b>{{ dataset_type }}</b>
-
-</div>
-
-<!-- Main -->
-<div class="main">
-
-    <h1>📊 Smart Data Dashboard</h1>
-
-    <!-- Summary -->
-    <div class="grid">
-
-        <div class="card">
-            <div class="highlight">{{ summary.Rows }}</div>
-            <p>Rows</p>
         </div>
 
-        <div class="card">
-            <div class="highlight">{{ summary.Columns }}</div>
-            <p>Columns</p>
+        <div class="col-lg-4 text-end">
+
+            <a href="/download" class="btn btn-success">
+
+                <i class="bi bi-download"></i>
+
+                Download Dataset
+
+            </a>
+
         </div>
 
-        <div class="card">
-            <div class="highlight">{{ summary["Duplicate Rows"] }}</div>
-            <p>Duplicates</p>
+    </div>
+
+    <!-- Statistics Cards -->
+
+    <div class="row">
+
+        <div class="col-md-3">
+
+            <div class="dashboard-card">
+
+                <h6>Dataset Type</h6>
+
+                <h3>{{ dataset_type }}</h3>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="dashboard-card">
+
+                <h6>Rows</h6>
+
+                <h3>{{ summary.rows }}</h3>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="dashboard-card">
+
+                <h6>Columns</h6>
+
+                <h3>{{ summary.columns }}</h3>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="dashboard-card">
+
+                <h6>Quality Score</h6>
+
+                <h3>{{ quality_score }}%</h3>
+
+            </div>
+
         </div>
 
     </div>
 
     <!-- AI Insights -->
-    <div class="card">
 
-        <h3>🤖 AI Insights</h3>
+    <div class="card shadow mt-4">
 
-        <p>{{ ai_result }}</p>
+        <div class="card-header bg-primary text-white">
 
-    </div>
+            🤖 AI Business Insights
 
-    <!-- Chart -->
-    <div class="card">
+        </div>
 
-        <h3>📈 Visualization</h3>
+        <div class="card-body">
 
-        {{ chart | safe }}
+            <pre style="white-space:pre-wrap;font-family:Poppins;">
+{{ ai_result }}
+            </pre>
 
-    </div>
-
-    <!-- Preview -->
-    <div class="card">
-
-        <h3>📄 Data Preview</h3>
-
-        {{ preview | safe }}
+        </div>
 
     </div>
 
-    <!-- Download -->
-    <div class="card">
+    <!-- Main Chart -->
 
-        <a href="/download">
-            <button>Download Report</button>
-        </a>
+    <div class="card shadow mt-4">
+
+        <div class="card-header">
+
+            📈 Main Visualization
+
+        </div>
+
+        <div class="card-body">
+
+            {{ charts.main|safe }}
+
+        </div>
+
+    </div>
+
+    <!-- Two Charts -->
+
+    <div class="row mt-4">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    📊 Special Analysis
+
+                </div>
+
+                <div class="card-body">
+
+                    {{ charts.special|safe }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    📦 Box Plot
+
+                </div>
+
+                <div class="card-body">
+
+                    {{ charts.box|safe }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- More Charts -->
+
+    <div class="row mt-4">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    🔥 Correlation Heatmap
+
+                </div>
+
+                <div class="card-body">
+
+                    {{ charts.heatmap|safe }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card shadow">
+
+                <div class="card-header">
+
+                    🎯 Scatter Plot
+
+                </div>
+
+                <div class="card-body">
+
+                    {{ charts.scatter|safe }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Numeric Summary -->
+
+    <div class="card shadow mt-4">
+
+        <div class="card-header">
+
+            📋 Numeric Statistics
+
+        </div>
+
+        <div class="card-body">
+
+            {% if numeric_summary %}
+
+                {% for col, stats in numeric_summary.items() %}
+
+                    <div class="mb-4">
+
+                        <h5>{{ col }}</h5>
+
+                        <table class="table table-bordered">
+
+                            <tr>
+
+                                <th>Mean</th>
+
+                                <td>{{ stats.mean }}</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Median</th>
+
+                                <td>{{ stats.median }}</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Minimum</th>
+
+                                <td>{{ stats.minimum }}</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Maximum</th>
+
+                                <td>{{ stats.maximum }}</td>
+
+                            </tr>
+
+                            <tr>
+
+                                <th>Std</th>
+
+                                <td>{{ stats.std }}</td>
+
+                            </tr>
+
+                        </table>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="alert alert-warning">
+
+                    No numeric columns found.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- Dataset Preview -->
+
+    <div class="card shadow mt-4">
+
+        <div class="card-header">
+
+            📄 Dataset Preview
+
+        </div>
+
+        <div class="card-body">
+
+            {{ preview|safe }}
+
+        </div>
 
     </div>
 
 </div>
 
-</body>
-
-</html>
+{% endblock %}

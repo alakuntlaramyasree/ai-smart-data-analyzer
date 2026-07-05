@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <h2 class="fw-bold">
+            📊 Analysis History
+        </h2>
+
+        <a href="/" class="btn btn-primary">
+            + New Analysis
+        </a>
+
+    </div>
+
+    {% if history %}
+
+    <div class="card shadow">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>File</th>
+
+                            <th>Dataset Type</th>
+
+                            <th>Rows</th>
+
+                            <th>Columns</th>
+
+                            <th>Quality</th>
+
+                            <th>Date</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for row in history %}
+
+                        <tr>
+
+                            <td>{{ row.id }}</td>
+
+                            <td>{{ row.filename }}</td>
+
+                            <td>
+
+                                <span class="badge bg-info">
+
+                                    {{ row.dataset_type }}
+
+                                </span>
+
+                            </td>
+
+                            <td>{{ row.rows }}</td>
+
+                            <td>{{ row.columns }}</td>
+
+                            <td>
+
+                                <span class="badge bg-success">
+
+                                    {{ row.quality_score }}%
+
+                                </span>
+
+                            </td>
+
+                            <td>{{ row.created_at }}</td>
+
+                            <td>
+
+                                <a href="/delete/{{ row.id }}"
+                                   class="btn btn-sm btn-danger">
+
+                                    Delete
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-info">
+
+        No analysis history found.
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

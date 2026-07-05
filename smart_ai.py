@@ -1,36 +1,69 @@
-from gemini_service import ask_gemini
+import os
+import json
+
+from dotenv import load_dotenv
+from google import genai
+
+from profiler import full_profile
+
+load_dotenv()
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
 
 def smart_ai_analyzer(df, dataset_type):
 
-    # Convert small sample of data
-    sample_data = df.head(10).to_string()
-
-    columns = list(df.columns)
+    profile = full_profile(df)
 
     prompt = f"""
-You are a senior data scientist AI.
+You are a world-class Senior Data Analyst.
 
-Analyze this dataset and act like an expert analyst.
+Analyze the following dataset profile.
 
-Dataset Type (system detected): {dataset_type}
+Dataset Type:
+{dataset_type}
 
-Columns:
-{columns}
+Dataset Profile:
+{json.dumps(profile, indent=2)}
 
-Sample Data:
-{sample_data}
+Return your answer in markdown with the following sections.
 
-Your tasks:
+# Executive Summary
 
-1. Identify what this dataset represents
-2. Find key patterns
-3. Detect anomalies or unusual values
-4. Give business insights
-5. Suggest actions or decisions
-6. Explain in simple language for non-technical users
+# Key Insights
 
-Be specific and practical.
+# Important Trends
+
+# Risks
+
+# Recommendations
+
+# Business Opportunities
+
+# Overall Data Quality
+
+Keep the response under 500 words.
 """
 
-    return ask_gemini(prompt)
+    try:
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+
+        return response.text
+
+    except Exception as e:
+
+        return f"""
+# AI Analysis Error
+
+Unable to analyze this dataset.
+
+Reason:
+
+{str(e)}
+"""
